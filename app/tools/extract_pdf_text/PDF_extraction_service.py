@@ -1,6 +1,9 @@
 import os
 from typing import Dict, Union
 from .interfaces import SourceLoader, PDFExtractor
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class PDFExtractionService:
@@ -11,15 +14,19 @@ class PDFExtractionService:
     ):
         self.loader = loader
         self.extractor = extractor
+        logger.info("PDFExtractionService initialized")
 
     def extract(self, source: str) -> Dict[str, Union[str, int, bool]]:
         pdf_path = None
 
         try:
+            logger.info(f"Loading PDF from source: {source}")
             pdf_path = self.loader.load(source)
+            logger.info(f"PDF loaded successfully, extracting text")
             text, pages = self.extractor.extract(pdf_path)
 
             if not text:
+                logger.warning("PDF contains no extractable text")
                 return {
                     "success": True,
                     "text": "",
@@ -27,6 +34,7 @@ class PDFExtractionService:
                     "error": "PDF contains no extractable text."
                 }
 
+            logger.info(f"Text extraction successful: {pages} pages, {len(text)} characters")
             return {
                 "success": True,
                 "text": text,
@@ -35,6 +43,7 @@ class PDFExtractionService:
             }
 
         except Exception as e:
+            logger.error(f"Error extracting PDF: {e}", exc_info=True)
             return {
                 "success": False,
                 "text": "",
@@ -45,6 +54,7 @@ class PDFExtractionService:
         finally:
             if source.startswith(("http://", "https://")) and pdf_path:
                 try:
+                    logger.debug(f"Cleaning up temporary file: {pdf_path}")
                     os.remove(pdf_path)
-                except OSError:
-                    pass
+                except OSError as e:
+                    logger.warning(f"Failed to remove temporary file {pdf_path}: {e}")

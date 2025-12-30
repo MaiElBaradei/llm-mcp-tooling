@@ -1,6 +1,9 @@
 from .PDF_extraction_service import PDFExtractionService
 from .PDF_source_loader import PDFSourceLoader
 from .PDF_text_extractor import PDFTextExtractor
+import logging
+
+logger = logging.getLogger(__name__)
 
 class ExtractPDFTextTool:
     name = "extract_pdf_text"
@@ -14,6 +17,17 @@ class ExtractPDFTextTool:
             loader=PDFSourceLoader(),
             extractor=PDFTextExtractor()
         )
+        logger.info("ExtractPDFTextTool initialized")
 
     def run(self, source: str):
-        return self.service.extract(source)
+        try:
+            logger.info(f"Extracting text from PDF source: {source}")
+            result = self.service.extract(source)
+            if result.get("success"):
+                logger.info(f"PDF extraction successful: {result.get('pages', 0)} pages extracted")
+            else:
+                logger.warning(f"PDF extraction failed: {result.get('error')}")
+            return result
+        except Exception as e:
+            logger.error(f"Error extracting PDF text: {e}", exc_info=True)
+            raise
