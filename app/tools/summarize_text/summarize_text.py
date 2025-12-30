@@ -10,10 +10,10 @@ class SummarizeTextTool:
 
     def run(self, text: str) -> SummarizeTextOutput:
         raw = self.service.summarize(text)
-        print(raw)
+        #print(raw)
 
         return SummarizeTextOutput(
-            summary=raw["text"].summary,
-            prompt=raw["text"].prompt,
-            metadata=raw["text"].metadata,
+            summary=raw["json"]["summary"],
+            prompt=raw["json"]["prompt"],
+            metadata=raw["json"]["metadata"],
         )

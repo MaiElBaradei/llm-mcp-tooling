@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from typing import Dict
 from .interfaces import LLMClient
 from .summarize_text_schema import SummarizeTextOutput
+from .summarize_text_schema import RESPONSE_SCHEMA
 
 load_dotenv()
 
@@ -29,13 +30,13 @@ class GeminiClient(LLMClient):
             config=types.GenerateContentConfig(
                 system_instruction=system_prompt,
                 temperature=0.0,
-                response_mime_type= "application/json",
-                response_schema= SummarizeTextOutput,
+                response_mime_type="application/json",
+                response_schema=RESPONSE_SCHEMA,
             ),
             contents=user_prompt,
         )
 
         return {
-            "text": response.parsed,
+            "json": response.parsed,
             "model": self.model,
         }
