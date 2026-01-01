@@ -1,5 +1,8 @@
 from pydantic import BaseModel
 
+class FetchExchangeRateToolArgs(BaseModel):
+    base_currency: str
+    target_currency: str
 
 class ExchangeRateInfo(BaseModel):
     base_currency: str
