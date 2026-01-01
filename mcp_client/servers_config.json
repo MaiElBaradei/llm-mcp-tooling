@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "summarization": {
+      "command": "python",
+      "args": ["-u", "mcp_servers/summarization_server.py"]
+    },
+    "external-api": {
+      "command": "python",
+      "args": ["-u", "mcp_servers/external_api_server.py"]
+    },
+    "evaluation": {
+      "command": "python",
+      "args": ["-u", "mcp_servers/evaluation_server.py"]
+    }
+  }
+}
