@@ -1,4 +1,4 @@
 from .summarize_text import SummarizeTextTool
-from .gemini_client import GeminiClient
-
-__all__ = ["SummarizeTextTool", "GeminiClient"]
+from .summarize_text_schema import SummarizeTextToolArgs
+    
+__all__ = ["SummarizeTextTool", "SummarizeTextToolArgs"]

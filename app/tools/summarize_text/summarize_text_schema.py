@@ -1,48 +1,53 @@
 from pydantic import BaseModel
-from typing import List
+
+class SummarizeTextToolArgs(BaseModel):
+    text:str
 
 
-class prompt(BaseModel):
-    system_prompt: str
-    user_prompt: str
+# JSON Schema definitions for summarize_text tool
 
-class metadata(BaseModel):
-    model_name: str
-    document_language: str
-    document_length: int
-    summary_length: int
-    processing_time: float
-
-class SummarizeTextOutput(BaseModel):
-    summary: str
-    prompt: prompt
-    metadata: metadata
-
-
-
-RESPONSE_SCHEMA = {
-    "type": "OBJECT",
+SUMMARIZE_TEXT_RESPONSE_SCHEMA = {
+    "type": "object",
     "required": ["summary", "prompt", "metadata"],
     "properties": {
-        "summary": {"type": "STRING"},
+        "summary": {
+            "type": "string"
+        },
         "prompt": {
-            "type": "OBJECT",
+            "type": "object",
             "required": ["system_prompt", "user_prompt"],
             "properties": {
-                "system_prompt": {"type": "STRING"},
-                "user_prompt": {"type": "STRING"},
-            },
+                "system_prompt": {
+                    "type": "string"
+                },
+                "user_prompt": {
+                    "type": "string"
+                }
+            }
         },
         "metadata": {
-            "type": "OBJECT",
+            "type": "object",
             "required": ["model_name", "document_language", "document_length", "summary_length", "processing_time"],
             "properties": {
-                "model_name": {"type": "STRING"},
-                "document_language": {"type": "STRING"},
-                "document_length": {"type": "INTEGER"},
-                "summary_length": {"type": "INTEGER"},
-                "processing_time": {"type": "NUMBER"},
-            },
-        },
-    },
+                "model_name": {
+                    "type": "string"
+                },
+                "document_language": {
+                    "type": "string"
+                },
+                "document_length": {
+                    "type": "integer"
+                },
+                "summary_length": {
+                    "type": "integer"
+                },
+                "processing_time": {
+                    "type": "number"
+                }
+            }
+        }
+    }
 }
+
+# Output schema for validation (same structure as response schema)
+SUMMARIZE_TEXT_OUTPUT_SCHEMA = SUMMARIZE_TEXT_RESPONSE_SCHEMA
