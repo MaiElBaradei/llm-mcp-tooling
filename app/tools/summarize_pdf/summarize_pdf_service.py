@@ -2,7 +2,7 @@ from typing import Iterator, List
 from ..extract_pdf_text import ExtractPDFTextTool
 from ..summarize_text import SummarizeTextTool
 from ..detect_language import DetectLanguageTool
-from utils import Chunker, decide_chunk_size
+from ...utils import Chunker, decide_chunk_size
 import logging
 
 logger = logging.getLogger(__name__)
@@ -73,11 +73,12 @@ class SummarizePDFService:
                     logger.info(f"Processing chunk {index}")
                     summary_result = self.summarizer.run(chunk)
 
-                    chunk_summary = summary_result.summary.strip()
+                    chunk_summary = summary_result["summary"].strip()
                     chunk_summaries.append(chunk_summary)
-                    self.summary_length += summary_result.metadata.get("summary_length", 0)
-                    self.document_length += summary_result.metadata.get("document_length", 0)
-                    self.processing_time += summary_result.metadata.get("processing_time", 0)
+                    metadata = summary_result.get("metadata", {})
+                    self.summary_length += metadata.get("summary_length", 0)
+                    self.document_length += metadata.get("document_length", 0)
+                    self.processing_time += metadata.get("processing_time", 0)
 
                     logger.debug(f"Chunk {index} summarized: {len(chunk_summary)} characters")
                     # streaming chunk-level result

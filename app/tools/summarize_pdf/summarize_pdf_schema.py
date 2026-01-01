@@ -1,6 +1,8 @@
 from pydantic import BaseModel, validator
 from typing import Optional, Dict, Any, List
 
+class SummarizePDFToolArgs(BaseModel):
+    file_path: str
 
 class SummarizePDFStreamOutput(BaseModel):
     chunk: Optional[int] = None
