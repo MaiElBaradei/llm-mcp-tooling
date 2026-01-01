@@ -1,6 +1,8 @@
 from pydantic import BaseModel
 from typing import Dict, Any
 
+class FetchWeatherToolArgs(BaseModel):
+    city: str
 
 class WeatherInfo(BaseModel):
     city: str
