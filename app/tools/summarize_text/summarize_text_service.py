@@ -1,5 +1,5 @@
 from ...llm.interfaces import LLMClient
-from .summarize_text_schema import SUMMARIZE_TEXT_RESPONSE_SCHEMA
+from .summarize_text_schema import SUMMARIZE_TEXT_OUTPUT_SCHEMA
 import logging
 import inspect
 
@@ -31,7 +31,7 @@ class SummarizationService:
                 result = self.llm_client.generate(
                     system_prompt=self.system_prompt,
                     user_prompt=user_prompt,
-                    response_schema=SUMMARIZE_TEXT_RESPONSE_SCHEMA,
+                    response_schema=SUMMARIZE_TEXT_OUTPUT_SCHEMA,
                     response_type="application/json",
                     temperature=0.0
                 )

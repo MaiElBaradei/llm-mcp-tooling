@@ -1,12 +1,17 @@
-from pydantic import BaseModel
-
-class SummarizeTextToolArgs(BaseModel):
-    text:str
-
-
 # JSON Schema definitions for summarize_text tool
 
-SUMMARIZE_TEXT_RESPONSE_SCHEMA = {
+SUMMARIZE_TEXT_ARGS_SCHEMA = {
+    "type": "object",
+    "required": ["text"],
+    "properties": {
+        "text": {
+            "type": "string",
+            "description": "The text to summarize"
+        }
+    }
+}
+
+SUMMARIZE_TEXT_OUTPUT_SCHEMA = {
     "type": "object",
     "required": ["summary", "prompt", "metadata"],
     "properties": {
@@ -48,6 +53,3 @@ SUMMARIZE_TEXT_RESPONSE_SCHEMA = {
         }
     }
 }
-
-# Output schema for validation (same structure as response schema)
-SUMMARIZE_TEXT_OUTPUT_SCHEMA = SUMMARIZE_TEXT_RESPONSE_SCHEMA
