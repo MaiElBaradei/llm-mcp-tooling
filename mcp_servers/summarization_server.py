@@ -13,7 +13,7 @@ import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import logging
-from mcp.server.fastmcp import FastMCP
+from fastmcp import FastMCP
 
 # Configure logging to stderr (not stdout, as that breaks STDIO communication)
 logging.basicConfig(
@@ -54,7 +54,7 @@ async def extract_pdf_text(pdf_path_or_url: str) -> str:
 
 
 @mcp.tool()
-async def summarize_text(text: str) -> str:
+async def summarize_text(text: str) -> dict:
     """Summarize a given text using an LLM.
     
     Args:
@@ -66,9 +66,13 @@ async def summarize_text(text: str) -> str:
     try:
         tool = SummarizeTextTool()
         result = tool.run(text)
-        return str(result)
+        return result
     except Exception as e:
-        return f"Error summarizing text: {str(e)}"
+        return {
+            "summary": f"Error summarizing text: {str(e)}",
+            "prompt": {"system_prompt": "", "user_prompt": text},
+            "metadata": {"error": True, "error_message": str(e)}
+        }
 
 
 @mcp.tool()
@@ -114,9 +118,10 @@ async def detect_language(text: str) -> str:
 
 
 def main():
-    """Initialize and run the MCP server."""
-    logger.info("Starting Summarization Server...")
-    mcp.run(transport="stdio")
+    """Initialize and run the MCP server with SSE."""
+    port = int(os.getenv("SERVER_PORT", "8000"))
+    logger.info(f"Starting Summarization Server on port {port}...")
+    mcp.run(transport="sse", port=port, host="0.0.0.0")
 
 
 if __name__ == "__main__":

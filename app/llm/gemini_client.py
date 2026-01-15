@@ -14,7 +14,7 @@ class GeminiClient(LLMClient):
     Gemini LLM client wrapper.
     """
 
-    def __init__(self, model_name: str = "gemini-2.5-flash"):
+    def __init__(self, model_name: str = "gemini-2.5-flash-lite"):
         try:
             logger.info(f"Initializing GeminiClient with model: {model_name}")
             self.client = Client()

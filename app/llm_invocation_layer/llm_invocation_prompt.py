@@ -80,7 +80,7 @@ Instructions:
 - When multiple tools are needed, use them in the optimal order
 - If a tool fails, explain the issue clearly
 
-Be brief and direct in your final responses."""
+"""
 
 USER_PROMPT_TEMPLATE = """User Request: {user_prompt}
 

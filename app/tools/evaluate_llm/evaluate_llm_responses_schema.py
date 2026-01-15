@@ -1,10 +1,3 @@
-from pydantic import BaseModel
-
-class EvaluateLLMResponsesToolArgs(BaseModel):
-    ground_truth: str
-    response: str
-
-
 # JSON Schema definitions for evaluate_llm tool
 
 EVALUATION_INPUT_SCHEMA = {

@@ -1,16 +1,13 @@
 {
   "mcpServers": {
     "summarization": {
-      "command": "python",
-      "args": ["-u", "mcp_servers/summarization_server.py"]
+      "url": "http://127.0.0.1:8001/sse"
     },
     "external-api": {
-      "command": "python",
-      "args": ["-u", "mcp_servers/external_api_server.py"]
+      "url": "http://127.0.0.1:8002/sse"
     },
     "evaluation": {
-      "command": "python",
-      "args": ["-u", "mcp_servers/evaluation_server.py"]
+      "url": "http://127.0.0.1:8003/sse"
     }
   }
 }

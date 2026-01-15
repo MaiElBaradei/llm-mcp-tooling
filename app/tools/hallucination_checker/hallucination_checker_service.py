@@ -1,4 +1,8 @@
-from ...llm import LLMClient
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from app.llm import LLMClient
 from .hallucination_checker_prompt import SYSTEM_PROMPT, USER_PROMPT_TEMPLATE
 from .hallucination_checker_schema import HALLUCINATION_RESULT_SCHEMA
 import logging

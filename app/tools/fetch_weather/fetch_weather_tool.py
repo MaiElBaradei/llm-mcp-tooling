@@ -1,9 +1,5 @@
 from .fetch_weather_service import WeatherService
-from .fetch_weather_schema import (
-    FetchWeatherOutput,
-    WeatherInfo,
-    WeatherAPIMetadata,
-)
+from .fetch_weather_schema import FETCH_WEATHER_OUTPUT_SCHEMA
 import logging
 
 logger = logging.getLogger(__name__)
@@ -20,7 +16,7 @@ class FetchWeatherTool:
         self.service = WeatherService()
         logger.info("FetchWeatherTool initialized")
 
-    def run(self, city: str) -> FetchWeatherOutput:
+    def run(self, city: str) -> dict:
         try:
             logger.info(f"Fetching weather for city: {city}")
             result = self.service.fetch_weather(city)

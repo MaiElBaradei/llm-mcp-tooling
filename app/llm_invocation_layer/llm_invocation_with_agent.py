@@ -3,6 +3,7 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.agents import create_agent
 from dotenv import load_dotenv
 from .llm_invocation_prompt import SYSTEM_PROMPT
+import os
 
 from .tool_wrappers import (
     extract_pdf_tool,
@@ -21,7 +22,7 @@ class Agent():
     def __init__(self):
         # Initialize the Gemini model
         self.llm = ChatGoogleGenerativeAI(
-            model="gemini-2.5-flash",
+            model="gemini-2.5-flash-lite",
             temperature=0
         )
 

@@ -1,8 +1,12 @@
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from typing import Iterator, List
 from ..extract_pdf_text import ExtractPDFTextTool
 from ..summarize_text import SummarizeTextTool
 from ..detect_language import DetectLanguageTool
-from ...utils import Chunker, decide_chunk_size
+from app.utils import Chunker, decide_chunk_size
 import logging
 
 logger = logging.getLogger(__name__)

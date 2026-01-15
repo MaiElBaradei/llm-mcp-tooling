@@ -1,7 +1,7 @@
 from .fetch_exchange_rate_service import ExchangeRateService
 from .fetch_exchange_rate_schema import (
-    ExchangeRateInfo,
-    ExchangeRateMetadata,
+    EXCHANGE_RATE_INFO_SCHEMA,
+    EXCHANGE_RATE_METADATA_SCHEMA,
 )
 import logging
 

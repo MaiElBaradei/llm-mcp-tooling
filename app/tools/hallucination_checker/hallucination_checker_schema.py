@@ -1,14 +1,26 @@
-from pydantic import BaseModel
+# JSON Schema definitions for hallucination_checker tool
 
-# Pydantic Schema definitions for hallucination_checker tool input
-    
-class HallucinationCheckerToolArgs(BaseModel):
-    ground_truth: str
-    response: str
+HALLUCINATION_CHECKER_ARGS_SCHEMA = {
+    "type": "object",
+    "required": ["ground_truth", "response"],
+    "properties": {
+        "ground_truth": {
+            "type": "string",
+            "description": "The ground truth or source text to check against",
+            "minLength": 1
+        },
+        "response": {
+            "type": "string",
+            "description": "The response text to check for hallucinations",
+            "minLength": 1
+        }
+    }
+}
+
 
 # JSON Schema definitions for hallucination_checker tool
 
-HALLUCINATION_INPUT_SCHEMA = {
+HALLUCINATION_CHECKER_ARGS_SCHEMA = {
     "type": "object",
     "required": ["ground_truth", "response"],
     "properties": {

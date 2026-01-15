@@ -17,10 +17,11 @@ import sys
 import json
 from contextlib import AsyncExitStack
 from typing import Dict, List, Any
+import traceback
 
 # MCP Client Imports
-from mcp import ClientSession, StdioServerParameters
-from mcp.client.stdio import stdio_client
+from mcp import ClientSession
+from mcp.client.sse import sse_client
 
 # LangChain & LangGraph Imports
 from langchain_mcp_adapters.tools import load_mcp_tools
@@ -59,11 +60,9 @@ def read_config_json():
     Returns:
         dict: Parsed JSON content with MCP server definitions
     """
-    config_path = os.getenv("MCP_SERVER_CONFIG")
-    if not config_path:
-        script_dir = os.path.dirname(os.path.abspath(__file__))
-        config_path = os.path.join(script_dir, "servers_config.json")
-        print(f"MCP_SERVER_CONFIG not set. Falling back to: {config_path}")
+
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    config_path = os.path.join(script_dir, "servers_config.json")
     
     try:
         with open(config_path, "r") as f:
@@ -76,11 +75,13 @@ def read_config_json():
 # ---------------------------
 # Google Gemini LLM Instantiation
 # ---------------------------
+if not os.getenv("GOOGLE_API_KEY"):
+    raise ValueError("GOOGLE_API_KEY not found")
 llm = ChatGoogleGenerativeAI(
     model="gemini-2.5-flash",
     temperature=0,
     max_retries=2,
-    google_api_key=os.getenv("GEMINI_API_KEY")
+    google_api_key=os.getenv("GOOGLE_API_KEY")
 )
 
 
@@ -119,27 +120,33 @@ class MCPClientManager:
         for server_name, server_info in mcp_servers.items():
             print(f"\n🔌 Connecting to MCP Server: {server_name}...")
             
-            server_params = StdioServerParameters(
-                command=server_info["command"],
-                args=server_info["args"]
-            )
+            url = server_info.get("url")
+            if not url:
+                print(f"  ❌ Server '{server_name}' has no 'url' defined in config")
+                continue
+            
+            print(f"  📍 URL: {url}")
             
             try:
-                # Establish stdio connection to the server
+                # Establish SSE connection - sse_client creates its own HTTP client
+                print(f"  🔗 Establishing SSE connection...")
                 read, write = await self.stack.enter_async_context(
-                    stdio_client(server_params)
+                    sse_client(url)
                 )
                 
                 # Create client session
+                print(f"  📡 Creating client session...")
                 session = await self.stack.enter_async_context(
                     ClientSession(read, write)
                 )
                 
                 # Initialize the session
+                print(f"  🚀 Initializing session...")
                 await session.initialize()
                 self.sessions[server_name] = session
                 
                 # Load MCP tools using LangChain adapter
+                print(f"  🔧 Loading tools...")
                 server_tools = await load_mcp_tools(session)
                 
                 # Add tools to aggregated list and create mapping
@@ -152,7 +159,10 @@ class MCPClientManager:
                 print(f"  ✅ {len(server_tools)} tools loaded from {server_name}")
                 
             except Exception as e:
-                print(f"  ❌ Failed to connect to server {server_name}: {e}")
+                print(f"  ❌ Failed to connect to server {server_name}")
+                print(f"     Error: {e}")
+                print(f"     Full traceback:")
+                traceback.print_exc()
         
         if not tools:
             print("\n❌ No tools loaded from any server.")
@@ -562,14 +572,3 @@ async def main():
     finally:
         # Ensure proper cleanup on exit
         await manager.cleanup()
-
-
-# ---------------------------
-# Entry Point
-# ---------------------------
-if __name__ == "__main__":
-    try:
-        asyncio.run(main())
-    except (KeyboardInterrupt, RuntimeError):
-        # Suppress cleanup errors on exit
-        pass

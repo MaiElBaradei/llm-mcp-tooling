@@ -3,24 +3,24 @@ from langgraph.config import get_stream_writer
 from langchain.tools import tool
 from tools import (
     ExtractPDFTextTool, 
-    ExtractPDFToolArgs,
+    EXTRACT_PDF_ARGS_SCHEMA,
     DetectLanguageTool,
-    DetectLanguageToolArgs,
+    DETECT_LANGUAGE_ARGS_SCHEMA,
     FetchWeatherTool,
-    FetchWeatherToolArgs,
+    FETCH_WEATHER_ARGS_SCHEMA,
     FetchExchangeRateTool,
-    FetchExchangeRateToolArgs,
+    FETCH_EXCHANGE_RATE_ARGS_SCHEMA,
     SummarizeTextTool,
-    SummarizeTextToolArgs,
+    SUMMARIZE_TEXT_ARGS_SCHEMA,
     HallucinationCheckerTool,
-    HallucinationCheckerToolArgs,
+    HALLUCINATION_CHECKER_ARGS_SCHEMA,
     SummarizePDFTool,
-    SummarizePDFToolArgs,
+    SUMMARIZE_PDF_ARGS_SCHEMA,
     EvaluateLLMResponsesTool,
-    EvaluateLLMResponsesToolArgs,
+    EVALUATION_INPUT_SCHEMA,
 )
 
-@tool("extract_pdf_text", args_schema=ExtractPDFToolArgs)
+@tool("extract_pdf_text", args_schema=EXTRACT_PDF_ARGS_SCHEMA)
 def extract_pdf_tool(pdf_path_or_url: str) -> dict:
     """Extracts text from a PDF file given a local path or HTTP URL.
     
@@ -32,7 +32,7 @@ def extract_pdf_tool(pdf_path_or_url: str) -> dict:
     return ExtractPDFTextTool().run(pdf_path_or_url)
 
 
-@tool("detect_language", args_schema=DetectLanguageToolArgs)
+@tool("detect_language", args_schema=DETECT_LANGUAGE_ARGS_SCHEMA)
 def detect_language_tool(text: str) -> dict:
     """Detects the language of a given text string.
     
@@ -44,7 +44,7 @@ def detect_language_tool(text: str) -> dict:
     return DetectLanguageTool().run(text)
 
 
-@tool("fetch_weather", args_schema=FetchWeatherToolArgs)
+@tool("fetch_weather", args_schema=FETCH_WEATHER_ARGS_SCHEMA)
 def fetch_weather_tool(city: str) -> dict:
     """Retrieves current weather information for a given city.
     
@@ -56,7 +56,7 @@ def fetch_weather_tool(city: str) -> dict:
     return FetchWeatherTool().run(city)
 
 
-@tool("fetch_exchange_rate", args_schema=FetchExchangeRateToolArgs)
+@tool("fetch_exchange_rate", args_schema=FETCH_EXCHANGE_RATE_ARGS_SCHEMA)
 def fetch_exchange_rate_tool(base_currency: str, target_currency: str) -> dict:
     """Retrieves the latest exchange rate for a currency pair.
     
@@ -69,7 +69,7 @@ def fetch_exchange_rate_tool(base_currency: str, target_currency: str) -> dict:
     return FetchExchangeRateTool().run(base_currency, target_currency)
 
 
-@tool("summarize_text", args_schema=SummarizeTextToolArgs)
+@tool("summarize_text", args_schema=SUMMARIZE_TEXT_ARGS_SCHEMA)
 def summarize_text_tool(text: str) -> dict:
     """Summarizes a given text using an LLM.
     
@@ -81,7 +81,7 @@ def summarize_text_tool(text: str) -> dict:
     return SummarizeTextTool().run(text)
 
 
-@tool("hallucination_checker", args_schema=HallucinationCheckerToolArgs)
+@tool("hallucination_checker", args_schema=HALLUCINATION_CHECKER_ARGS_SCHEMA)
 def hallucination_checker_tool(ground_truth: str, response: str) -> dict:
     """Checks whether the response contains information not supported by the given ground truth.
     
@@ -92,7 +92,7 @@ def hallucination_checker_tool(ground_truth: str, response: str) -> dict:
     return HallucinationCheckerTool().run({"ground_truth": ground_truth, "response": response})
 
 
-@tool("summarize_pdf", args_schema=SummarizePDFToolArgs)
+@tool("summarize_pdf", args_schema=SUMMARIZE_PDF_ARGS_SCHEMA)
 def summarize_pdf_tool(file_path: str) -> Iterator[Dict]:
     """Summarizes the content of a PDF file from a local path or HTTP URL.
     
@@ -107,7 +107,7 @@ def summarize_pdf_tool(file_path: str) -> Iterator[Dict]:
     return event["final_summary"]
 
 
-@tool("evaluate_llm_responses", args_schema=EvaluateLLMResponsesToolArgs)
+@tool("evaluate_llm_responses", args_schema=EVALUATION_INPUT_SCHEMA)
 def evaluate_llm_responses_tool(ground_truth: str, response: str) -> dict:
     """Evaluates an LLM response against ground truth using cosine similarity, lexical similarity, and conciseness.
     

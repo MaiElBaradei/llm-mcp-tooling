@@ -1,10 +1,14 @@
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from datetime import datetime, timezone
 from .hallucination_checker_schema import (
-    HALLUCINATION_INPUT_SCHEMA,
+    HALLUCINATION_CHECKER_ARGS_SCHEMA,
     HALLUCINATION_OUTPUT_SCHEMA,
 )
 from .hallucination_checker_service import HallucinationCheckerService
-from ...llm.gemini_client import GeminiClient
+from app.llm.gemini_client import GeminiClient
 from .hallucination_checker_prompt import SYSTEM_PROMPT, USER_PROMPT_TEMPLATE
 import logging
 import jsonschema
@@ -30,7 +34,7 @@ class HallucinationCheckerTool:
             
             # Validate input against JSON schema
             try:
-                jsonschema.validate(instance=input_data, schema=HALLUCINATION_INPUT_SCHEMA)
+                jsonschema.validate(instance=input_data, schema=HALLUCINATION_CHECKER_ARGS_SCHEMA)
             except jsonschema.ValidationError as e:
                 logger.error(f"Input validation failed: {e.message}")
                 raise ValueError(f"Invalid input data: {e.message}")

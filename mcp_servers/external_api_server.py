@@ -8,7 +8,7 @@ Exposes tools for:
 """
 
 import logging
-from mcp.server.fastmcp import FastMCP
+from fastmcp import FastMCP
 import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -69,9 +69,10 @@ async def fetch_exchange_rate(base_currency: str, target_currency: str) -> str:
 
 
 def main():
-    """Initialize and run the MCP server."""
-    logger.info("Starting External API Tooling Server...")
-    mcp.run(transport="stdio")
+ """Initialize and run the MCP server with SSE."""
+ port = int(os.getenv("SERVER_PORT", "8000"))
+ logger.info(f"Starting External API Tooling Server on port {port}...")
+ mcp.run(transport="sse", port=port, host="0.0.0.0")
 
 
 if __name__ == "__main__":

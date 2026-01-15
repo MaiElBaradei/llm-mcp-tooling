@@ -1,14 +1,18 @@
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from logging_config import configure_logging
-from tools import ExtractPDFTextTool
+from app.llm_invocation_layer.invoke_llm import invoke_llm
+import asyncio
 
-def main() -> None:
-	"""Start the application."""
+async def main() -> None:
 	configure_logging()
-	# TODO: replace with real startup logic
-	print("App started. Logging configured.")
 
+	query = input("Enter your query: ")
+	await invoke_llm(query)
 
 
 
 if __name__ == "__main__":
-	main()
+	asyncio.run(main())

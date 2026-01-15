@@ -1,6 +1,6 @@
 from typing import Iterator, Dict
 from datetime import datetime, timezone
-from .summarize_pdf_schema import SummarizePDFStreamOutput
+from .summarize_pdf_schema import SUMMARIZE_PDF_STREAM_OUTPUT_SCHEMA
 from .summarize_pdf_service import SummarizePDFService
 import logging
 
@@ -25,6 +25,7 @@ class SummarizePDFTool:
             for event in self.service.summarize(pdf_path_or_url):
                 event_count += 1
                 logger.debug(f"Yielding summarization event {event_count}")
+                print(event)
                 yield event
             logger.info(f"PDF summarization completed: {event_count} events yielded")
         except Exception as e:

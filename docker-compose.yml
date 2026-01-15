@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  summarization-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.summarization
+    container_name: mcp-summarization
+    ports:
+      - "8001:8000"
+    environment:
+      - SERVER_PORT=8000
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+    volumes:
+      - ./app:/app/app:ro
+      - ./mcp_servers/summarization_server.py:/app/mcp_servers/summarization_server.py:ro
+    restart: unless-stopped
+    networks:
+      - mcp-network
+
+  external-api-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.external-api
+    container_name: mcp-external-api
+    ports:
+      - "8002:8000"
+    environment:
+      - SERVER_PORT=8000
+      - OPEN_WEATHER_MAP_API_KEY=${OPEN_WEATHER_MAP_API_KEY}
+      - EXCHANGE_RATE_API_KEY=${EXCHANGE_RATE_API_KEY}
+    volumes:
+      - ./app:/app/app:ro
+      - ./mcp_servers/external_api_server.py:/app/mcp_servers/external_api_server.py:ro
+    restart: unless-stopped
+    networks:
+      - mcp-network
+
+  evaluation-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.evaluation
+    container_name: mcp-evaluation
+    ports:
+      - "8003:8000"
+    environment:
+      - SERVER_PORT=8000
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+    volumes:
+      - ./app:/app/app:ro
+      - ./mcp_servers/evaluation_server.py:/app/mcp_servers/evaluation_server.py:ro
+    restart: unless-stopped
+    networks:
+      - mcp-network
+
+networks:
+  mcp-network:
+    driver: bridge

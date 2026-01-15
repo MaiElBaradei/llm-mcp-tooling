@@ -15,7 +15,8 @@ class WeatherService:
     def __init__(self):
         self.api_key = os.getenv("OPEN_WEATHER_MAP_API_KEY")
         if not self.api_key:
-            logger.warning("OPEN_WEATHER_MAP_API_KEY is not set")
+            logger.error("OPEN_WEATHER_MAP_API_KEY is not set")
+            raise ValueError("OPEN_WEATHER_MAP_API_KEY is not found")
         else:
             logger.info("WeatherService initialized")
 

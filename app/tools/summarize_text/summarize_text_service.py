@@ -1,4 +1,8 @@
-from ...llm.interfaces import LLMClient
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from app.llm.interfaces import LLMClient
 from .summarize_text_schema import SUMMARIZE_TEXT_OUTPUT_SCHEMA
 import logging
 import inspect
@@ -15,7 +19,7 @@ class SummarizationService:
         try:
             if not text or not text.strip():
                 logger.error("Cannot summarize: text is empty")
-                raise ValueError("Text is empty.")
+                return {"error": "Input text is empty"}
 
             logger.info(f"Generating summary for text (length: {len(text)})")
             user_prompt = f"Summarize the following text:\n\n{text}"

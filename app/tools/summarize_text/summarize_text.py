@@ -1,6 +1,10 @@
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from .summarize_text_service import SummarizationService
 from .summarize_text_schema import SUMMARIZE_TEXT_OUTPUT_SCHEMA
-from ...llm.gemini_client import GeminiClient
+from app.llm.gemini_client import GeminiClient
 from .summarize_text_prompt import SYSTEM_SUMMARIZATION_PROMPT
 import logging
 import jsonschema
@@ -23,8 +27,12 @@ class SummarizeTextTool:
         try:
             logger.info(f"Starting text summarization (text length: {len(text) if text else 0})")
             raw = self.service.summarize(text)
+
+            if "error" in raw:
+                logger.error(f"Error from summarization service: {raw['error']}")
+                return raw
             
-            if "json" not in raw:
+            elif "json" not in raw:
                 logger.error("Invalid response from summarization service: missing 'json' key")
                 raise ValueError("Invalid response from summarization service: missing 'json' key")
             

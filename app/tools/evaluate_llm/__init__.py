@@ -1,4 +1,4 @@
 from .evaluate_llm_responses import EvaluateLLMResponsesTool
-from .evaluate_llm_responses_schema import EvaluateLLMResponsesToolArgs
+from .evaluate_llm_responses_schema import EVALUATION_INPUT_SCHEMA
 
-__all__ = ["EvaluateLLMResponsesTool", "EvaluateLLMResponsesToolArgs"]
+__all__ = ["EvaluateLLMResponsesTool", "EVALUATION_INPUT_SCHEMA"]
